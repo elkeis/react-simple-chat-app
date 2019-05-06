@@ -4,22 +4,30 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 
-/* View */
-import MockLoginView from './view/components/MockLoginView';
-import View from './view';
-import UserList from './view/components/UserList';
+/**
+ * View Factories (thats why names are starting with `_` )
+ * Wrap React components if necessary to separate logic from rendering
+ */
+import _MockLoginView from './view/components/MockLoginView';
+import _View from './view';
+import _UserList from './view/components/UserList';
 
 /* Model */
 import {store} from './model';
-import {openMockLoginView} from './commands';
+
+import {
+    fetchUsersCommand,
+    openLoginViewCommand
+} from './commands';
+
 
 const rootElement = document.getElementById('root');
 store.subscribe(() => {
     const state = store.getState();
-    const V = View({
+    const V = _View({
         view: state.view,
-        LoginView: MockLoginView({
-            UserList: UserList({
+        LoginView: _MockLoginView({
+            UserList: _UserList({
                 users: state.users,
                 onChooseUser: u => console.log(u)
             })
@@ -27,8 +35,8 @@ store.subscribe(() => {
     });
     ReactDOM.render(<V/>, rootElement);
 });
-
-openMockLoginView();
+openLoginViewCommand();
+fetchUsersCommand();
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
