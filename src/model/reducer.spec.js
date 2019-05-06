@@ -4,6 +4,8 @@ import {
     RECEIVE_USERS,
 
     LOGIN_VIEW,
+    REQUEST_CONVERSATIONS,
+    RECEIVE_CONVERSATIONS,
 } from './constants';
 
 import reducer from './reducer';
@@ -51,6 +53,39 @@ describe('Reducer function', () => {
                     data: usersData
                  })).toEqual({
                     users: {
+                        isFetching: false,
+                        data: [
+                            { id: 41, name: 'test1' }, 
+                            { id: 42, name: 'test2' }
+                        ]
+                    }
+                });
+            });
+        });
+    });
+    describe('REQUEST_CONVERSATIONS', () => {
+        it('should create conversations object and put it into the fetching state', () => {
+            const state = {};
+            expect(reducer(state, { type: REQUEST_CONVERSATIONS})).toEqual({
+                conversations: {
+                    isFetching: true
+                }
+            });
+        });
+
+        describe('RECEIVE_CONVERSATIONS', () => {
+            it('should create conversations object with users array', () => {
+                const conversations = [
+                    { id: 41, name: 'test1'}, 
+                    { id: 42, name: 'test2', someField: 55}];
+
+                const state = { conversations: { isFetching: true } };
+                
+                expect(reducer(state, { 
+                    type: RECEIVE_CONVERSATIONS,
+                    data: conversations
+                 })).toEqual({
+                    conversations: {
                         isFetching: false,
                         data: [
                             { id: 41, name: 'test1' }, 

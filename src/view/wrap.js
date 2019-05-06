@@ -14,7 +14,7 @@ export default function wrap(renderObject) {
             return <Component {...properties}></Component>
         }
     } else {
-        throw new Error(MALFORMED_EXCEPTION);
+       _throw(renderObject);
     }
 };
 

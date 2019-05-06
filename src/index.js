@@ -11,13 +11,16 @@ import * as serviceWorker from './serviceWorker';
 import _MockLoginView from './view/components/MockLoginView';
 import _View from './view';
 import _UserList from './view/components/UserList';
+import _ConversationsView from './view/components/ConversationsView';
 
 /* Model */
 import {store} from './model';
 
 import {
     fetchUsersCommand,
-    openLoginViewCommand
+    openLoginViewCommand,
+    openConversationsViewCommand,
+    fetchConversationsCommand
 } from './commands';
 
 
@@ -29,8 +32,11 @@ store.subscribe(() => {
         LoginView: _MockLoginView({
             UserList: _UserList({
                 users: state.users,
-                onChooseUser: u => console.log(u)
+                onChooseUser: u => fetchConversationsCommand(u.id).then(openConversationsViewCommand)
             })
+        }),
+        ConversationsView: _ConversationsView({
+            conversations: state.conversations && state.conversations.data
         })
     });
     ReactDOM.render(<V/>, rootElement);

@@ -2,15 +2,18 @@ import {store} from './model';
 import {
     setActiveView,
     receiveUsers,
-    requestUsers
+    requestUsers,
+    requestConversations,
+    receiveConversations
 } from './model/actionCreators'
 
 import {
-    LOGIN_VIEW
+    LOGIN_VIEW,
+    CONVERSATIONS_VIEW
 } from './view/constants'
 
 import {
-    fetchUsers
+    fetchUsers, fetchConversations
 } from './services';
 
 
@@ -25,11 +28,21 @@ export const openViewCommand = createOpenViewCommand({
 });
 
 export const openLoginViewCommand = () => openViewCommand(LOGIN_VIEW);
+export const openConversationsViewCommand = () => openViewCommand(CONVERSATIONS_VIEW);
 
-export const fetchUsersCommand = createFetchDataCommand({
+export const fetchUsersCommand = () => createFetchDataCommand({
     store,
     createRequestDataAction: requestUsers,
     createReceiveDataAction: receiveUsers,
     fetchDataFunction: fetchUsers
-});
+})();
+
+export const fetchConversationsCommand = userId => {
+    return createFetchDataCommand({
+        store,
+        createRequestDataAction: requestConversations,
+        createReceiveDataAction: receiveConversations,
+        fetchDataFunction: fetchConversations
+    })(userId);
+}
 

@@ -2,6 +2,8 @@ import {
     SET_ACTIVE_VIEW,
     REQUEST_USERS,
     RECEIVE_USERS,
+    REQUEST_CONVERSATIONS,
+    RECEIVE_CONVERSATIONS,
 } from './constants';
 
 
@@ -22,7 +24,21 @@ const reducers = {
                 name: u.name
             }))
         }
-    }
+    },
+    [REQUEST_CONVERSATIONS]: (state) => {
+        state.conversations = {
+            isFetching: true
+        }
+    },
+    [RECEIVE_CONVERSATIONS]: (state, action) => {
+        state.conversations = {
+            isFetching: false,
+            data: action.data.map(c => ({
+                id: c.id,
+                name: c.name
+            }))
+        }
+    },
 };
 
 export default function reducer(oldState, action) {

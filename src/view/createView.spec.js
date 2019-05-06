@@ -1,6 +1,7 @@
 import createView from './createView';
 import {
-    LOGIN_VIEW
+    LOGIN_VIEW,
+    CONVERSATIONS_VIEW,
 } from './constants';
 
 describe('Create View', () => {
@@ -9,6 +10,13 @@ describe('Create View', () => {
         expect(createView({
             view: LOGIN_VIEW,
             LoginView: expectedView
+        })).toEqual(expectedView);
+
+        expect(createView({
+            view: CONVERSATIONS_VIEW,
+            ConversationsView: expectedView,
+            LoginView: 'null',
+            NullView: 'null'
         })).toEqual(expectedView);
     }); 
 

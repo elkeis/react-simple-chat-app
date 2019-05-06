@@ -18,14 +18,15 @@ describe('Fetch users api', () => {
         });
     });
 
-    it('should return promise which will be resolved with users', () => {
+    it('should return promise which will be resolved with users', async () => {
         expect.assertions(2);
-        fetchUsers(get)().then(users => {
-            expect(users).toEqual([
-                { id: 1, name: 'test-user1' }, 
-                { id: 2, name: 'test-user2' }
-            ]);
-        })
+        
+        const users = await fetchUsers(get)();
+        
+        expect(users).toEqual([
+            { id: 1, name: 'test-user1' }, 
+            { id: 2, name: 'test-user2' }
+        ]);
         expect(get.mock.calls[0]).toEqual([USERS_URL]);
     });
 });
