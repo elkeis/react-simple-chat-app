@@ -1,7 +1,6 @@
 import React from 'react';
 
 export default function ConversationsView({conversations}) {
-    console.log(conversations);
     return (
         <div className="ConversationsView">
             <h2>conversations view</h2>
