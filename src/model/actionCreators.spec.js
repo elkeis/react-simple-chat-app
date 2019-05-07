@@ -4,6 +4,8 @@ import {
     receiveUsers,
     receiveConversations,
     requestConversations,
+    showConversationView,
+    hideConversationView,
 } from './actionCreators';
 
 import {
@@ -12,6 +14,8 @@ import {
     RECEIVE_USERS,
     REQUEST_CONVERSATIONS,
     RECEIVE_CONVERSATIONS,
+    SHOW_CONVERSATION_VIEW,
+    HIDE_CONVERSATION_VIEW,
 } from './constants';
 
 describe('Action Creators', () => {
@@ -45,6 +49,18 @@ describe('Action Creators', () => {
             type: RECEIVE_CONVERSATIONS,
             data: conversations
         });
+    });
+
+    it('showConversationView()', () => {
+        expect(showConversationView()).toEqual({
+            type: SHOW_CONVERSATION_VIEW
+        })
+    });
+
+    it('hideConversationView()', () => {
+        expect(hideConversationView()).toEqual({
+            type: HIDE_CONVERSATION_VIEW
+        })
     });
 
 });

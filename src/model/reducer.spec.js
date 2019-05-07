@@ -6,6 +6,8 @@ import {
     LOGIN_VIEW,
     REQUEST_CONVERSATIONS,
     RECEIVE_CONVERSATIONS,
+    SHOW_CONVERSATION_VIEW,
+    HIDE_CONVERSATION_VIEW,
 } from './constants';
 
 import reducer from './reducer';
@@ -93,6 +95,46 @@ describe('Reducer function', () => {
                         ]
                     }
                 });
+            });
+        });
+    });
+
+    describe('SHOW_CONVERSATION_VIEW', () => {
+        it('should create conversationView object set isVisible to true', () => {
+            const state = {};
+            expect(reducer(state, {
+                type: SHOW_CONVERSATION_VIEW
+            })).toEqual({
+                conversationView: {
+                    isVisible: true
+                }
+            });
+        });
+
+        it('should update conversationView object set isVisible to true', () => {
+            const state = {
+                conversationView: {someField: 1}
+            };
+            expect(reducer(state, {
+                type: SHOW_CONVERSATION_VIEW
+            })).toEqual({
+                conversationView: {
+                    someField: 1,
+                    isVisible: true
+                }
+            });
+        });
+    });
+
+    describe('HIDE_CONVERSATION_VIEW', () => {
+        it('should update or create conversationView object set isVisible to false', () => {
+            const state = {};
+            expect(reducer(state, {
+                type: HIDE_CONVERSATION_VIEW
+            })).toEqual({
+                conversationView: {
+                    isVisible: false
+                }
             });
         });
     });

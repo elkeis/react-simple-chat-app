@@ -1,12 +1,18 @@
 import React from 'react';
 
-export default function ConversationsView({conversations}) {
+export default function ConversationsView({
+    ConversationList, 
+    Navigation = (() => null), 
+    conversationClass = ''}) {
     return (
         <div className="ConversationsView">
-            <h2>conversations view</h2>
-            {conversations.map(c => (
-                <div key={c.id}>{c.name}</div>
-            ))}
+            <div className="conversation-list">
+                <Navigation/>
+                <ConversationList/>
+            </div>
+            <div className={`conversation-view ${conversationClass}`}>
+                No messages here yet    
+            </div>
         </div>
     )
 }

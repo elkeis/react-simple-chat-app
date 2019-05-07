@@ -4,6 +4,8 @@ import {
     RECEIVE_USERS,
     REQUEST_CONVERSATIONS,
     RECEIVE_CONVERSATIONS,
+    SHOW_CONVERSATION_VIEW,
+    HIDE_CONVERSATION_VIEW,
 } from './constants';
 
 export function setActiveView(view) {
@@ -24,4 +26,12 @@ export function requestConversations() {
 
 export function receiveConversations(conversations) {
     return { type: RECEIVE_CONVERSATIONS,  data: conversations };
+}
+
+export function showConversationView() {
+    return { type: SHOW_CONVERSATION_VIEW };
+}
+
+export function hideConversationView() {
+    return { type: HIDE_CONVERSATION_VIEW };
 }

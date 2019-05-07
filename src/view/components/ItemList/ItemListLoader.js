@@ -1,8 +1,8 @@
 import React from 'react';
 
-export default function UserListLoader() {
+export default function ItemListLoader() {
     return (
-        <div className="UserListLoader">
+        <div className="ItemListLoader">
             <p>Loading...</p>
         </div>
     )

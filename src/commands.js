@@ -4,7 +4,9 @@ import {
     receiveUsers,
     requestUsers,
     requestConversations,
-    receiveConversations
+    receiveConversations,
+    showConversationView,
+    hideConversationView,
 } from './model/actionCreators'
 
 import {
@@ -21,6 +23,7 @@ import {
     createFetchDataCommand,
     createOpenViewCommand
 } from './commandCreators'
+import { SHOW_CONVERSATION_VIEW, HIDE_CONVERSATION_VIEW } from './model/constants';
 
 export const openViewCommand = createOpenViewCommand({
     store,
@@ -46,3 +49,11 @@ export const fetchConversationsCommand = userId => {
     })(userId);
 }
 
+
+export function showConversationViewCommand () {
+    store.dispatch(showConversationView());
+}
+
+export function hideConversationViewCommand () {
+    store.dispatch(hideConversationView());
+}
