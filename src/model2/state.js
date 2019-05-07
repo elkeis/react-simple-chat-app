@@ -1,10 +1,15 @@
+import {
+    LOGIN_VIEW,
+    CONVERSATIONS_VIEW,
+    CONVERSATIONS_LIST_VIEW,
+    CREATE_CONVERSATION_VIEW
+} from '../view2/constants';
+
 export default {
-    rootView: {
-        activeView: 'login-view'
-    },
+    activeView: CONVERSATIONS_VIEW,
 
     loginView: {
-        type: 'login-view',
+        type: LOGIN_VIEW,
         userListView: {
             isFetching: false,
             users: [{
@@ -13,21 +18,48 @@ export default {
             }, {
                 id: 2,
                 name: 'test2'
-            }]
+            },
+        ]
         }
     },
 
     conversationsView: {
-        type: 'conversations-view',
+        type: CONVERSATIONS_VIEW,
+        activeView: CREATE_CONVERSATION_VIEW,
         conversationsListView: {
+            type: CONVERSATIONS_LIST_VIEW,
             isFetching: false,
             conversations: [
                 {id: 1, name: 'conversation-1'},
-                {id: 2, name: 'conversation-2'}
+                {id: 2, name: 'conversation-2'},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {id: 55, name: 'jjjj'},
             ]
         },
 
         createConversationView: {
+            type: CREATE_CONVERSATION_VIEW,
             isFetching: false,
             users: [{
                 id: 42, name: 'Ken',
