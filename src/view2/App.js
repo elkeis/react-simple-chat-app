@@ -1,10 +1,12 @@
 import React from 'react';
 import LoginView from './views/LoginView';
-import ConversationsView from './views/ConversationsView';
+import ChatView from './views/ChatView';
+
+import { APP_BACKGROUND_COLOR, APP_TEXT_COLOR } from './css';
 
 import {
     LOGIN_VIEW,
-    CONVERSATIONS_VIEW
+    CHAT_VIEW
 } from './constants';
 
 export default function App({state}) {
@@ -12,10 +14,10 @@ export default function App({state}) {
     const ActiveView = (activeView => {
         if (LOGIN_VIEW === activeView) {
             return LoginView;
-        } else if (CONVERSATIONS_VIEW === activeView) {
-            return ConversationsView;
+        } else if (CHAT_VIEW === activeView) {
+            return ChatView;
         } else {
-            return (() => <e>`${activeView} does not exist`</e>);
+            return (() => <e>{`${activeView} does not exist`}</e>);
         }
     })(state.activeView);
 
@@ -40,6 +42,8 @@ const STYLE = <style>{`
         width: 100%;
         height: 100%;
         position: absolute;
-        overflow: hidden;
+        overflow: scroll;
+        background: ${APP_BACKGROUND_COLOR};
+        color: ${APP_TEXT_COLOR};
     }
 `}</style>

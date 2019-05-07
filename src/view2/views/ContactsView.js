@@ -4,23 +4,23 @@ import {
     genClass
 } from '../css';
 
-export default function ConversationsListView({conversationsListView}) {
+export default function ContactsView({contactsView}) {
     const ListComponent = (isFetching => {
         if (isFetching) {
             return () => <>'Loading...'</>
         } else {
             return List
         }
-    })(conversationsListView.isFetching);
+    })(contactsView.isFetching);
     return (
         <div className={$component}>
             {STYLE}
-            <ListComponent items={conversationsListView.conversations} onChooseItem={c => console.log(c)}></ListComponent>
+            <ListComponent items={contactsView.contacts} onChooseItem={c => console.log(c)}></ListComponent>
         </div>
     )
 }
 
-const $component = genClass('ConversationsListView');
+const $component = genClass('ContactsView');
 const STYLE = <style>{`
     .${$component} {
         width: 100%;

@@ -1,12 +1,14 @@
 import {
     LOGIN_VIEW,
-    CONVERSATIONS_VIEW,
-    CONVERSATIONS_LIST_VIEW,
-    CREATE_CONVERSATION_VIEW
+    CHAT_VIEW,
+        NAVIGATION_VIEW,
+            CONVERSATIONS_VIEW,
+            CONTACTS_VIEW,
+        CONVERSATION_VIEW
 } from '../view2/constants';
 
 export default {
-    activeView: CONVERSATIONS_VIEW,
+    activeView: CHAT_VIEW,
 
     loginView: {
         type: LOGIN_VIEW,
@@ -23,51 +25,40 @@ export default {
         }
     },
 
-    conversationsView: {
-        type: CONVERSATIONS_VIEW,
-        activeView: CREATE_CONVERSATION_VIEW,
-        conversationsListView: {
-            type: CONVERSATIONS_LIST_VIEW,
-            isFetching: false,
-            conversations: [
-                {id: 1, name: 'conversation-1'},
-                {id: 2, name: 'conversation-2'},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {},
-                {id: 55, name: 'jjjj'},
-            ]
+    chatView: {
+        type: CHAT_VIEW,
+        description: 'conversations',
+        activeView: NAVIGATION_VIEW,
+
+        navigationView: {
+            type: NAVIGATION_VIEW,
+            activeView: CONVERSATIONS_VIEW,
+            description: 'navigation',
+
+            conversationsView: {
+                type: CONVERSATIONS_VIEW,
+                description: 'conversations',
+                isFetching: false,
+                conversations: [
+                    {id: 1, name: 'conversation-1'},
+                    {id: 2, name: 'conversation-2'},
+                    {id: 55, name: 'jjjj'},
+                ]
+            },
+            contactsView: {
+                type: CONTACTS_VIEW,
+                description: 'contacts',
+                isFetching: false,
+                contacts: [{
+                    id: 42, name: 'Ken',
+                    id: 43, name: 'Barbie'
+                }]
+            },
         },
 
-        createConversationView: {
-            type: CREATE_CONVERSATION_VIEW,
-            isFetching: false,
-            users: [{
-                id: 42, name: 'Ken',
-                id: 43, name: 'Barbie'
-            }]
-        },
-
-        activeConversationView: {
+        conversationView: {
+            type: CONVERSATION_VIEW,
+            description: 'conversation',
             isShown: false,
             conversationDetailsView: {
                 isFetching: false,
