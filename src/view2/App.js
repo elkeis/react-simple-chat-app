@@ -1,8 +1,15 @@
 import React from 'react';
-const LoginView = () => null;
-const ConversationsView = () => null
-const view = 'view';
 
-export default function App() {
-    //
+export default function App({state}) {
+    return (
+        <>
+        <style> {`
+            code {
+                white-space: pre;
+            }
+        
+        `}</style>
+        <code>{JSON.stringify(state, null, 2)}</code>
+        </>
+    )
 }
