@@ -20,6 +20,7 @@ const z = (obj => {
 });
 
 export default z({
+    errors: z([]),
     activeView: LOGIN_VIEW,
 
     loginView: z({

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import ConversationsView from './ConversationsView';
 import ContactsView from './ContactsView';
 import Navigation from '../components/Navigation';
 import ViewSwitch from '../components/ViewSwitch';
+import {UserContext} from './UserContext';
+
 import {
     CONVERSATIONS_VIEW,
     CONTACTS_VIEW,
@@ -11,10 +13,10 @@ import {
 import {
     genClass, TOP_SPLIT
 } from '../css';
+import store from '../../model';
+import { setActiveView, loadConversations, loadContacts } from '../../model/actions';
 
-genClass();
 export default function NavigationView ({navigationView}) {
-
     const ActiveView = ( activeView => {
         if(CONTACTS_VIEW === activeView) {
             return ContactsView;
@@ -24,6 +26,7 @@ export default function NavigationView ({navigationView}) {
             return () => <e>{`View does not exist ${activeView}`}</e>
         }
     })(navigationView.activeView);
+    const user = useContext(UserContext);
     const views = [navigationView.conversationsView, navigationView.contactsView];
     return (
         <div className={$component}>
@@ -35,7 +38,18 @@ export default function NavigationView ({navigationView}) {
                 <ActiveView {...navigationView}></ActiveView>
             </div>
             <div className={$view_switch}>
-                <ViewSwitch views={views} activeView={navigationView.activeView} onChooseView={v => console.log(v)}></ViewSwitch>
+                <ViewSwitch 
+                    views={views} 
+                    activeView={navigationView.activeView} 
+                    onChooseView={v => {
+                        store.dispatch(setActiveView(v.type))
+                        if (CONVERSATIONS_VIEW === v.type) {
+                            store.dispatch(loadConversations(user.data.id));
+                        } else if (CONTACTS_VIEW === v.type) {
+                            store.dispatch(loadContacts(user.data.id));
+                        }
+                    }}>
+                </ViewSwitch>
             </div>
         </div>
     )

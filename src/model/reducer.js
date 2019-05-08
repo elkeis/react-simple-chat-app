@@ -10,17 +10,23 @@ import {
 
 
 import initialState from './initialState';
-import { REQUEST_USERS, RECEIVE_USERS, OPEN_CHAT_VIEW } from './actionTypes';
+import { REQUEST_USERS, RECEIVE_USERS, REQUEST_CONVERSATIONS, RECEIVE_CONVERSATIONS, RECEIVE_CONVERSATIONS_ERROR, SET_ACTIVE_VIEW, SET_USER, REQUEST_CONTACTS, RECEIVE_CONTACTS, RECEIVE_CONTACTS_ERROR } from './actionTypes';
 
 export default function reducer(state = initialState, action = {type: '__init__'}) {
     const s = state;
     const a = action;
 
     return z({
-        
+        errors: (s => {
+            if(a.type.includes('ERROR')) {
+                return z([a, ...s]);
+            } else {
+                return s;
+            }
+        })                                  (s.errors),
         activeView: (s => {
-            if (OPEN_CHAT_VIEW === a.type) {
-                return CHAT_VIEW;
+            if (SET_ACTIVE_VIEW === a.type) {
+                return [LOGIN_VIEW, CHAT_VIEW].find(v => a.data === v) || s;
             } else {
                 return s;
             }
@@ -52,18 +58,22 @@ export default function reducer(state = initialState, action = {type: '__init__'
             type: CHAT_VIEW,
             description: 'chat app',
             activeView: (s => {
-                return s;
+                if (SET_ACTIVE_VIEW === a.type) {
+                    return [NAVIGATION_VIEW, CONVERSATION_VIEW].find(v => a.data === v) || s;
+                } else {
+                    return s;
+                }
             })                              (s.chatView.activeView),
             user: z({
                 isFetching: (s => {
-                    if (OPEN_CHAT_VIEW === a.type) {
+                    if (SET_USER === a.type) {
                         return false;
                     } else {
                         return s;
                     }
                 })                          (s.chatView.user),
                 data: (s => {
-                    if (OPEN_CHAT_VIEW === a.type) {
+                    if (SET_USER === a.type) {
                         return z(a.data);
                     } else {
                         return s;
@@ -75,7 +85,11 @@ export default function reducer(state = initialState, action = {type: '__init__'
                 type: NAVIGATION_VIEW,
                 description: 'navigation',
                 activeView: (s => {
-                    return s;
+                    if (SET_ACTIVE_VIEW === a.type) {
+                        return [CONVERSATIONS_VIEW, CONTACTS_VIEW].find(v => a.data === v) || s;
+                    } else {
+                        return s;
+                    }
                 })                          (s.chatView.navigationView.activeView),
         // conversations       
                 conversationsView: z({
@@ -83,10 +97,22 @@ export default function reducer(state = initialState, action = {type: '__init__'
                     description: 'conversations',
                     conversations: z({
                         isFetching: (s => {
-                            return s;
+                            if (REQUEST_CONVERSATIONS === a.type) {
+                                return true;
+                            } else if (RECEIVE_CONVERSATIONS === a.type) {
+                                return false;
+                            } else if (RECEIVE_CONVERSATIONS_ERROR === a.type) {
+                                return false;
+                            } else {
+                                return s;
+                            }
                         })                  (s.chatView.navigationView.conversationsView.conversations.isFetching),
                         data: (s => {
-                            return s
+                            if (RECEIVE_CONVERSATIONS === a.type) {
+                                return z(a.data);
+                            } else {
+                                return s;
+                            }
                         })                  (s.chatView.navigationView.conversationsView.conversations.data)
                     })
                 }),
@@ -96,10 +122,22 @@ export default function reducer(state = initialState, action = {type: '__init__'
                     description: 'contacts',
                     contacts: z({
                         isFetching: (s => {
-                            return s;
+                            if (REQUEST_CONTACTS === a.type) {
+                                return true;
+                            } else if (RECEIVE_CONTACTS === a.type) {
+                                return false;
+                            } else if (RECEIVE_CONTACTS_ERROR === a.type) {
+                                return false;
+                            } else {
+                                return s;
+                            }
                         })                  (s.chatView.navigationView.contactsView.contacts.isFetching),
                         data: (s => {
-                            return s;
+                            if (RECEIVE_CONTACTS === a.type) {
+                                return z(a.data);
+                            } else {
+                                return s;
+                            }
                         })                  (s.chatView.navigationView.contactsView.contacts.data)
                     })
                 })

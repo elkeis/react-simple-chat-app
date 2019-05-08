@@ -1,14 +1,15 @@
 import React from 'react';
 import List from '../components/List';
 import {
-    MEDIA_BREAK_WIDTH
+    MEDIA_BREAK_WIDTH, CHAT_VIEW
 } from '../constants';
 import {
     genClass
 } from '../css';
 
 import store from '../../model';
-import { openChatView } from '../../model/actions';
+import { setUser, loadConversations, setActiveView } from '../../model/actions';
+
 
 export default function LoginView({loginView}) {
     return (
@@ -17,7 +18,11 @@ export default function LoginView({loginView}) {
             <h1>Simple Chat App</h1>
             <h5>Please choose demo user:</h5>
             <div className={$user_list_container}>
-                <List items={loginView.users} onChooseItem={user => store.dispatch(openChatView(user))}></List>
+                <List items={loginView.users} onChooseItem={user => {
+                    store.dispatch(setUser(user));
+                    store.dispatch(setActiveView(CHAT_VIEW));
+                    store.dispatch(loadConversations(user.id));
+                }}></List>
             </div>
         </div>
     )

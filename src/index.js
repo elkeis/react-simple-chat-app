@@ -11,6 +11,12 @@ import {
     loadUsers
 } from './model/actions';
 
+import {
+    setBaseUrl
+} from './http/baseUrl';
+setBaseUrl('http://assignment.bunq.com');
+
+
 const rootElement = document.getElementById('root');
 store.subscribe(() => {
     ReactDOM.render(<App state={store.getState()}/>, rootElement);
@@ -22,4 +28,3 @@ store.dispatch(loadUsers());
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
-
