@@ -9,13 +9,17 @@ export default function List({items, onChooseItem}) {
     
     const itemsToDisplay = ((items, onChooseItem) => {
         if (items.isFetching) {
-            return <div className={$loader}>Loading...</div>
+            return <div className={$message}>Loading...</div>
         } else {
-            return items.data.map(item => (
-                <div className={$list_item} key={item.id} onClick={() => onChooseItem(item)}>
-                    {item.name}
-                </div>
-            ))
+            if (items.data && items.data.length === 0) {
+                return <div className={$message}>No items yet...</div>
+            } else {
+                return items.data.map(item => (
+                    <div className={$list_item} key={item.id} onClick={() => onChooseItem(item)}>
+                        {item.name}
+                    </div>
+                ))
+            }
         }
     })(items, onChooseItem);
 
@@ -29,7 +33,7 @@ export default function List({items, onChooseItem}) {
 
 const $list_item = genClass('list-item');
 const $list = genClass('List');
-const $loader = genClass('loader');
+const $message = genClass('message');
 
 const STYLE = <style>{`
 .${$list} {
@@ -49,7 +53,7 @@ const STYLE = <style>{`
     background-color: rgba(255,255,255, .05);
 }
 
-.${$loader} {
+.${$message} {
     display: flex;
     justify-content: center;
     padding-top: 10px;

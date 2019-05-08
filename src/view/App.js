@@ -25,7 +25,7 @@ export default function App({state}) {
         <div className="App">
             {STYLE}
             <ActiveView {...state}></ActiveView>
-            <code>{JSON.stringify(state, null, 2)}</code>
+            {/* <code>{JSON.stringify(state, null, 2)}</code> */}
         </div>
     )
 }
@@ -42,7 +42,7 @@ const STYLE = <style>{`
         width: 100%;
         height: 100%;
         position: absolute;
-        overflow: scroll;
+        overflow: hidden;
         background: ${APP_BACKGROUND_COLOR};
         color: ${APP_TEXT_COLOR};
     }

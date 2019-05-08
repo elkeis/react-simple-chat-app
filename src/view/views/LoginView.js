@@ -1,26 +1,33 @@
 import React from 'react';
-import UserListView from './UserListView';
+import List from '../components/List';
 import {
     MEDIA_BREAK_WIDTH
 } from '../constants';
+import {
+    genClass
+} from '../css';
+
+import store from '../../model';
+import { openChatView } from '../../model/actions';
 
 export default function LoginView({loginView}) {
     return (
-        <div className="LoginView">
+        <div className={$component}>
             {STYLE}
             <h1>Simple Chat App</h1>
             <h5>Please choose demo user:</h5>
-            <div class="user-list-container">
-                <UserListView {...loginView}></UserListView>
+            <div className={$user_list_container}>
+                <List items={loginView.users} onChooseItem={user => store.dispatch(openChatView(user))}></List>
             </div>
         </div>
     )
 }
 
-
+const $component = genClass('LoginView');
+const $user_list_container = genClass('user-list-container');
 const STYLE = <style>{
     `
-    .LoginView {
+    .${$component} {
         display: flex;
         justify-content: flex-start;
         align-items: center;
@@ -28,13 +35,13 @@ const STYLE = <style>{
     }
 
 
-    .LoginView .user-list-container {
+    .${$user_list_container} {
         padding: 0 20px;
         width: 200px;
     }
 
     @media screen and (max-width: ${MEDIA_BREAK_WIDTH})  {
-        .LoginView .user-list-container {
+        .${$user_list_container} {
             width: 100%;
         }
     }

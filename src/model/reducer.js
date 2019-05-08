@@ -1,73 +1,147 @@
-import {
-    SET_ACTIVE_VIEW,
-    REQUEST_USERS,
-    RECEIVE_USERS,
-    REQUEST_CONVERSATIONS,
-    RECEIVE_CONVERSATIONS,
-    SHOW_CONVERSATION_VIEW,
-    HIDE_CONVERSATION_VIEW,
-} from './constants';
+import { 
+    LOGIN_VIEW,
+    CHAT_VIEW,
+    NAVIGATION_VIEW,
+    CONVERSATIONS_VIEW,
+    CONTACTS_VIEW,
+    CONVERSATION_VIEW 
+} from '../view/constants';
 
 
-const reducers = {
-    [SET_ACTIVE_VIEW]: (state, action) => {
-        state.view = action.data;
-    },
-    [REQUEST_USERS]: (state) => {
-        state.users = update(state.users, {
-            isFetching: true
-        });
-    },
-    [RECEIVE_USERS]: (state, action) => {
-        state.users = update(state.users, {
-            isFetching: false,
-            data: action.data.map(u => ({
-                id: u.id,
-                name: u.name
-            }))
-        });
-    },
-    [REQUEST_CONVERSATIONS]: (state) => {
-        state.conversations = update(state.conversations, {
-            isFetching: true
-        });
-    },
-    [RECEIVE_CONVERSATIONS]: (state, action) => {
-        state.conversations = update(state.conversations, {
-            isFetching: false,
-            data: action.data.map(c => ({
-                id: c.id,
-                name: c.name
-            }))
+
+import initialState from './initialState';
+import { REQUEST_USERS, RECEIVE_USERS, OPEN_CHAT_VIEW } from './actionTypes';
+
+export default function reducer(state = initialState, action = {type: '__init__'}) {
+    const s = state;
+    const a = action;
+
+    return z({
+        
+        activeView: (s => {
+            if (OPEN_CHAT_VIEW === a.type) {
+                return CHAT_VIEW;
+            } else {
+                return s;
+            }
+        })                                  (s.activeView),
+// login 
+        loginView: z({
+            type: LOGIN_VIEW,
+            users: z({
+                isFetching: (s => {
+                    if (REQUEST_USERS === a.type) {
+                        return true;
+                    } else if (RECEIVE_USERS === a.type) {
+                        return false;
+                    } else {
+                        return s;
+                    }
+                })                      (s.loginView.users.isFetching),
+                data: (s => {
+                    if (RECEIVE_USERS === a.type) {
+                        return z(a.data);
+                    } else {
+                        return s;
+                    }
+                })                      (s.loginView.users.data)
+            })
+        }),
+// chat 
+        chatView: z({
+            type: CHAT_VIEW,
+            description: 'chat app',
+            activeView: (s => {
+                return s;
+            })                              (s.chatView.activeView),
+            user: z({
+                isFetching: (s => {
+                    if (OPEN_CHAT_VIEW === a.type) {
+                        return false;
+                    } else {
+                        return s;
+                    }
+                })                          (s.chatView.user),
+                data: (s => {
+                    if (OPEN_CHAT_VIEW === a.type) {
+                        return z(a.data);
+                    } else {
+                        return s;
+                    }
+                })                          (s.chatView.user.data),
+            }),
+    // navigation 
+            navigationView: z({
+                type: NAVIGATION_VIEW,
+                description: 'navigation',
+                activeView: (s => {
+                    return s;
+                })                          (s.chatView.navigationView.activeView),
+        // conversations       
+                conversationsView: z({
+                    type: CONVERSATIONS_VIEW,
+                    description: 'conversations',
+                    conversations: z({
+                        isFetching: (s => {
+                            return s;
+                        })                  (s.chatView.navigationView.conversationsView.conversations.isFetching),
+                        data: (s => {
+                            return s
+                        })                  (s.chatView.navigationView.conversationsView.conversations.data)
+                    })
+                }),
+        // contacts
+                contactsView: z({
+                    type: CONTACTS_VIEW,
+                    description: 'contacts',
+                    contacts: z({
+                        isFetching: (s => {
+                            return s;
+                        })                  (s.chatView.navigationView.contactsView.contacts.isFetching),
+                        data: (s => {
+                            return s;
+                        })                  (s.chatView.navigationView.contactsView.contacts.data)
+                    })
+                })
+            }),
+    // conversation
+            conversationView: z({
+                type: CONVERSATION_VIEW,
+                description: 'conversation',
+                conversation: z({
+                    isFetching: (s => {
+                        return s;
+                    })                      (s.chatView.conversationView.conversation.isFetching),
+                    data: (s => {
+                        return s;
+                    })                      (s.chatView.conversationView.conversation.data)
+                }),
+                chatBubbles: z({
+                    isFetching: (s => {
+                        return s;
+                    })                      (s.chatView.conversationView.chatBubbles.isFetching),
+                    data: (s => {
+                        return s;
+                    })                      (s.chatView.conversationView.chatBubbles.data)
+                }),
+                message: {
+                    text: (s => {
+                        return s;
+                    })                      (s.chatView.conversationView.message.text)
+                }
+            })
         })
-    },
-    [SHOW_CONVERSATION_VIEW]: (state) => {
-        state.conversationView = update(state.conversationView, {
-            isVisible: true
-        })
-    },
-    [HIDE_CONVERSATION_VIEW]: (state) => {
-        state.conversationView = update(state.conversationView, {
-            isVisible: false
-        });
-    }
+    });
 };
 
-export default function reducer(oldState, action) {
-    const newState = {...oldState};
-    if (action) {
-        const r = reducers[action.type];
-        if (r) {
-            r(newState, action, oldState);
-        } else {
-            throw new Error(`can't find reducer for action: ${JSON.stringify(action)}`);
-        }
-        
+/**
+ * Freeze object
+ * @param {Object} obj 
+ */
+const z = (obj => {
+    if(typeof obj === 'object') {
+        return Object.freeze(obj)
+    } else {
+        return obj;
     }
-    return newState;
-}
-
-
-function update(old, withNew) {
-    return Object.assign({}, old, withNew);
-}
+});

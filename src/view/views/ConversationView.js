@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ChatBubblesView from './ChatBubblesView';
+import ChatBubblesList from '../components/ChatBubblesList';
 import ChatInput from '../components/ChatInput';
 import {
     genClass, TOP_SPLIT, ACTIVE_COLOR, ACTIVE_BACKGROUND_COLOR
@@ -14,7 +14,7 @@ export default function ConversationView({conversationView}) {
                 {conversationView.description}
             </div>
             <div className={$chat_bubbles}>
-                <ChatBubblesView {...conversationView}></ChatBubblesView>
+                <ChatBubblesList {...conversationView}></ChatBubblesList>
             </div>
             <div className={$message_input}>
                 <div className={$input_area}>

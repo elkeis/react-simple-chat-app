@@ -55,6 +55,19 @@ describe('Store', () => {
             expect(store.getState()).toEqual(state1);
             expect(reducer.mock.calls[1]).toEqual([initialState, action]);
         });
+
+        describe('When called with function', () => {
+            it('should call that function with dispatch function as argument', () => {
+                const reducer = jest.fn()
+                    .mockReturnValueOnce(initialState)
+                    .mockReturnValueOnce(state1);
+                store = createStore(reducer);
+                const fn = dispatch => dispatch(action);
+                store.dispatch(fn);
+                expect(store.getState()).toEqual(state1);
+                expect(reducer.mock.calls[1]).toEqual([initialState, action]);
+            });
+        });
     });
 
     describe('Store.subscribe()', ()=> {

@@ -4,12 +4,12 @@ export default function createStore(reducer) {
         throw new Error('cant create store without reducer');
     }
 
-    let state = {};
+    let state;
     const lock = createLock();
     const listeners = [];
     
     lock(() => {
-        state = reducer(state);
+        state = reducer();
     }, LOCK_ERROR_MESSAGE);
 
     return {
@@ -18,6 +18,10 @@ export default function createStore(reducer) {
         },
 
         dispatch(action) {
+            if (typeof action === 'function') {
+                action(this.dispatch);
+                return;
+            }
             lock(() => {
                 state = reducer(state, action);
             }, LOCK_ERROR_MESSAGE);
