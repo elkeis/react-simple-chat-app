@@ -1,8 +1,6 @@
 import React from 'react';
 import {
     genClass,
-
-    BOTTOM_SPLIT,
 } from '../css';
 
 export default function Navigation({
@@ -24,10 +22,9 @@ const $back_button = genClass('back-button');
 const STYLE = <style>{`
 .${$component} {
     width: 100%;
-    height: 50px;
+    height: 100%;
     display: flex;
     flex-direction: row;
-    ${BOTTOM_SPLIT};
 }
 .${$description} {
     display: flex;
@@ -40,12 +37,12 @@ const STYLE = <style>{`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 15px;
+    padding: 0 15px;
     cursor: pointer;
 
 }
 .${$back_button}:before {
-    font: 35px arial, sans-serif;
+    font: 20px arial, sans-serif;
     content: "<";
     transform: translate3d(-3px, 0, 0);
 }

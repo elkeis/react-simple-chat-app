@@ -1,26 +1,24 @@
 import React from 'react';
 import NavigationView from './NavigationView';
+import ConversationView from './ConversationView';
 
 import {
-    MEDIA_BREAK_WIDTH
+    MEDIA_BREAK_WIDTH, CONVERSATION_VIEW
 } from '../constants';
 
 import {
     genClass, RIGHT_SPLIT, APP_BACKGROUND_COLOR, LEFT_SPLIT
 } from '../css';
 
-genClass();
 export default function ChatView ({chatView}) {
 
-    // const ActiveView = ( activeView => {
-    //     if(CONTACTS_VIEW === activeView) {
-    //         return ContactsView;
-    //     } else if (CONVERSATIONS_VIEW === activeView) {
-    //         return ConversationsView;
-    //     } else {
-    //         return () => <e>{`View does not exist ${activeView}`}</e>
-    //     }
-    // })(chatView.activeView);
+    const getConversationClass = ((activeView) => {
+        if(CONVERSATION_VIEW === activeView) {
+            return `${$conversation} ${$show}`;
+        } else {
+            return $conversation
+        }
+    });
 
     return (
         <div className={$component}>
@@ -28,8 +26,8 @@ export default function ChatView ({chatView}) {
             <div className={$navigation}>
                 <NavigationView {...chatView}></NavigationView>
             </div>
-            <div className={$conversation}>
-                No messages here yet    
+            <div className={getConversationClass(chatView.activeView)}>
+                <ConversationView {...chatView}></ConversationView>
             </div>
         </div>
     )

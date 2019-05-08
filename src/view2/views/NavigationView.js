@@ -2,13 +2,14 @@ import React from 'react';
 import ConversationsView from './ConversationsView';
 import ContactsView from './ContactsView';
 import Navigation from '../components/Navigation';
+import ViewSwitch from '../components/ViewSwitch';
 import {
     CONVERSATIONS_VIEW,
     CONTACTS_VIEW,
 } from '../constants';
 
 import {
-    genClass, TOP_SPLIT, RIGHT_SPLIT
+    genClass, TOP_SPLIT
 } from '../css';
 
 genClass();
@@ -23,24 +24,28 @@ export default function NavigationView ({navigationView}) {
             return () => <e>{`View does not exist ${activeView}`}</e>
         }
     })(navigationView.activeView);
-
+    const views = [navigationView.conversationsView, navigationView.contactsView];
     return (
         <div className={$component}>
             {STYLE}
-            <Navigation onGoBack={() => console.log('go back')} description={navigationView.description}/>
-            <ActiveView {...navigationView}></ActiveView>
+            <div className={$navigation}>
+                <Navigation onGoBack={() => console.log('go back')} description={navigationView.description}/>
+            </div>
+            <div className={$active_view}>
+                <ActiveView {...navigationView}></ActiveView>
+            </div>
             <div className={$view_switch}>
-                <div className={$conversations_view_switch}>conversations</div>
-                <div className={$contacts_view_switch}>contacts</div>
+                <ViewSwitch views={views} activeView={navigationView.activeView} onChooseView={v => console.log(v)}></ViewSwitch>
             </div>
         </div>
     )
 }
 
 const $component = genClass('NavigationView');
-const $view_switch = genClass('view-switch');
-const $conversations_view_switch = genClass('list-view-switch');
-const $contacts_view_switch = genClass('list-view-switch');
+const $navigation = genClass('navigation');
+const $active_view = genClass('active_view');
+const $view_switch = genClass('view_switch');
+
 const STYLE = <style>{`
 
 .${$component} {
@@ -51,26 +56,22 @@ const STYLE = <style>{`
     width: 100%;
 }
 
-.${$view_switch} {
-    display: flex;
-    flex-direction: row;
+.${$component} > div {
     width: 100%;
-    height: 50px;
     ${TOP_SPLIT};
 }
 
-.${$conversations_view_switch}, .${$contacts_view_switch} {
-    width: 50%;
-    height: 100%;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+.${$navigation} {
+    min-height: 50px;
 }
 
-.${$conversations_view_switch} {
-    ${RIGHT_SPLIT};
+.${$active_view} {
+    height: 100%;
+    overflow: scroll;
+}
+
+.${$view_switch} {
+    min-height: 50px;
 }
 
 `}</style>
