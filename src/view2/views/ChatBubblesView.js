@@ -2,7 +2,8 @@ import React from 'react';
 import  {
     genClass,
     CHAT_BUBBLE_COLOR,
-    CHAT_MINE_BUBBLE_COLOR
+    CHAT_MINE_BUBBLE_COLOR,
+    SHADOW_COLOR,
 } from '../css';
 
 export default function ChatBubblesView({chatBubblesView}) {
@@ -18,7 +19,7 @@ export default function ChatBubblesView({chatBubblesView}) {
             {STYLE}
             <div className={$chat_bubbles}>
                 {chatBubblesView.chatBubbles.data.map(cb => (
-                    <div className={getBubbleContainerClass(cb.sender)}>
+                    <div className={getBubbleContainerClass(cb.sender)} key={cb.id}>
                         <div className={$bubble}>
                             <div className={$message}>
                                 {cb.message}
@@ -79,6 +80,7 @@ const STYLE = <style>{`
         padding: 10px;
         border-radius: 12px;
         margin: 0 10px 0 10px;
+        box-shadow: inset 0 0 1px ${SHADOW_COLOR};
     }
 
     .${$sender} {

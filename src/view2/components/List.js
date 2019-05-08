@@ -3,7 +3,6 @@ import {
     genClass,
 
     BOTTOM_SPLIT,
-    TOP_SPLIT,
 } from  '../css';
 
 export default function List({items, onChooseItem}) {

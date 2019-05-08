@@ -2,7 +2,7 @@ import React from 'react';
 import LoginView from './views/LoginView';
 import ChatView from './views/ChatView';
 
-import { APP_BACKGROUND_COLOR, APP_TEXT_COLOR } from './css';
+import { APP_BACKGROUND_COLOR, APP_TEXT_COLOR} from './css';
 
 import {
     LOGIN_VIEW,

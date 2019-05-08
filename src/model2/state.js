@@ -127,7 +127,7 @@ export default {
                             },
                         },
                         {
-                            id: 1, 
+                            id: 3, 
                             message: `Now that we know `,
                             sent: true,
                             sender: {
@@ -137,7 +137,7 @@ export default {
                             },
                         },
                         {
-                            id: 2, 
+                            id: 4, 
                             message: `My money's in that office, `,
                             sent: true,
                             sender: {
@@ -147,7 +147,7 @@ export default {
                             },
                         },
                         {
-                            id: 1, 
+                            id: 5, 
                             message: `Now that we know who you are, I know who I am. I'm not a mistake! It all makes sense! In a comic, you know how you can tell who the arch-villain's going to be? He's the exact opposite of the hero. `,
                             sent: true,
                             sender: {
@@ -157,7 +157,7 @@ export default {
                             },
                         },
                         {
-                            id: 2, 
+                            id: 6, 
                             message: `My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps,`,
                             sent: true,
                             sender: {
@@ -167,7 +167,7 @@ export default {
                             },
                         },
                         {
-                            id: 1, 
+                            id: 7, 
                             message: `Now that we know `,
                             sent: true,
                             sender: {
@@ -177,7 +177,7 @@ export default {
                             },
                         },
                         {
-                            id: 2, 
+                            id: 8, 
                             message: `My money's in that office, `,
                             sent: true,
                             sender: {
