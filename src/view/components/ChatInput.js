@@ -4,7 +4,7 @@ import {
 } from '../css';
 
 
-export default function ChatInput({text, onUpdateText}) {
+export default function ChatInput({text, onUpdateText, disabled}) {
     return (
         <div className={$component}>
             {STYLE}
@@ -12,7 +12,7 @@ export default function ChatInput({text, onUpdateText}) {
                 <div className={$padding}>
                     <div className={$text_area_wrapper}>
                         <div className={$expander}>{text + '.'}</div> {/* + '.' cool-hack */}
-                        <textarea className={$textarea} placeholder="Write a message..." value={text} onChange={e => onUpdateText(e.target.value)}></textarea>
+                        <textarea disabled={disabled} className={$textarea} placeholder="Write a message..." value={text} onChange={e => onUpdateText(e.target.value)}></textarea>
                     </div>
                 </div>
             </div>

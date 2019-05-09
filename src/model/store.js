@@ -7,6 +7,17 @@ export default function createStore(reducer) {
     let state;
     const lock = createLock();
     const listeners = [];
+
+    const dispatch = action => {
+        if (typeof action === 'function') {
+            action(dispatch);
+            return;
+        }
+        lock(() => {
+            state = reducer(state, action);
+        }, LOCK_ERROR_MESSAGE);
+        listeners.slice().forEach(l => l());
+    }
     
     lock(() => {
         state = reducer();
@@ -17,16 +28,7 @@ export default function createStore(reducer) {
             return lock(() => state, LOCK_ERROR_MESSAGE);
         },
 
-        dispatch(action) {
-            if (typeof action === 'function') {
-                action(this.dispatch);
-                return;
-            }
-            lock(() => {
-                state = reducer(state, action);
-            }, LOCK_ERROR_MESSAGE);
-            listeners.slice().forEach(l => l());
-        },
+        dispatch,
 
         subscribe(listener) {
             const wrap = () => listener();

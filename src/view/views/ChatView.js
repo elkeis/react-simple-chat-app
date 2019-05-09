@@ -2,8 +2,8 @@ import React from 'react';
 import NavigationView from './NavigationView';
 import ConversationView from './ConversationView';
 import {
-    UserContextProvider
-} from './UserContext';
+    ChatContextProvider
+} from './ChatContext';
 
 import {
     MEDIA_BREAK_WIDTH, CONVERSATION_VIEW
@@ -24,7 +24,7 @@ export default function ChatView ({chatView}) {
     });
 
     return (
-        <UserContextProvider user={chatView.user}>
+        <ChatContextProvider context={chatView.context}>
             <div className={$component}>
                 {STYLE}
                 <div className={$navigation}>
@@ -34,7 +34,7 @@ export default function ChatView ({chatView}) {
                     <ConversationView {...chatView}></ConversationView>
                 </div>
             </div>
-        </UserContextProvider>
+        </ChatContextProvider>
     )
 }
 

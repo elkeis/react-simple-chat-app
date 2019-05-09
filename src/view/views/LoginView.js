@@ -33,6 +33,14 @@ const $user_list_container = genClass('user-list-container');
 const STYLE = <style>{
     `
     .${$component} {
+        overflow: scroll;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        
+        position: absolute;
+        height: 100%;
+        width: 100%;
+
         display: flex;
         justify-content: flex-start;
         align-items: center;

@@ -40,6 +40,24 @@ export default z({
             data: z({})
         }),
 
+        context: z({
+            user: z({
+                data: z({})
+            }),
+            conversations: z({
+                isFetching: false,
+                data: z([])
+            }),
+            contacts: z({
+                isFetching: false,
+                data: z([])
+            }),
+            messages: z({
+                isFetching: false,
+                data: z([])
+            }),
+        }),
+
         navigationView: z({
             type: NAVIGATION_VIEW,
             activeView: CONVERSATIONS_VIEW,
