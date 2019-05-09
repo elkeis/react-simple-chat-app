@@ -45,13 +45,13 @@ export default function ConversationView({conversationView}) {
                         <ChatInput disabled={isDisabled} text={conversationView.message.text} onUpdateText={t => store.dispatch(updateMessage(t))}></ChatInput>
                     </div>
                     <div className={$send_button_wrapper}>
-                        <button className={$send_button} onClick={() => {
+                        <div className={$send_button} onClick={() => {
                             store.dispatch(postMessage(
                                 conversationView.conversation.data.conversation.id, 
                                 context.user.data.id,
                                 conversationView.message.text
                             ));
-                        }}>send</button>
+                        }}></div>
                     </div>
                 </div>
             </div>
