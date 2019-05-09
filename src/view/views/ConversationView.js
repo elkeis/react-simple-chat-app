@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useContext} from 'react';
 import ChatBubblesList from '../components/ChatBubblesList';
 import ChatInput from '../components/ChatInput';
 import {
@@ -6,11 +6,13 @@ import {
 } from '../css';
 import Navigation from '../components/Navigation';
 import store from '../../model';
-import { setActiveView } from '../../model/actions';
+import { setActiveView, updateMessage, postMessage } from '../../model/actions';
 import { NAVIGATION_VIEW } from '../constants';
+import { ChatContext } from './ChatContext';
 
 export default function ConversationView({conversationView}) {
-    const [text, setText] = useState('');
+
+    const context = useContext(ChatContext);
     
     const isDisabled = (conversationData => {
         return Object.keys(conversationData).length === 0;
@@ -35,15 +37,21 @@ export default function ConversationView({conversationView}) {
                 {/* {conversationView.description} */}
             </div>
             <div className={$chat_bubbles}>
-                <ChatBubblesList {...conversationView}></ChatBubblesList>
+                <ChatBubblesList {...conversationView} currentUser={context.user.data}></ChatBubblesList>
             </div>
             <div className={$message_input}>
                 <div className={$input_area}>
                     <div className={$chat_input_wrapper}>
-                        <ChatInput disabled={isDisabled} text={text} onUpdateText={t => setText(t)}></ChatInput>
+                        <ChatInput disabled={isDisabled} text={conversationView.message.text} onUpdateText={t => store.dispatch(updateMessage(t))}></ChatInput>
                     </div>
                     <div className={$send_button_wrapper}>
-                        <div className={$send_button}></div>
+                        <button className={$send_button} onClick={() => {
+                            store.dispatch(postMessage(
+                                conversationView.conversation.data.conversation.id, 
+                                context.user.data.id,
+                                conversationView.message.text
+                            ));
+                        }}>send</button>
                     </div>
                 </div>
             </div>
@@ -71,7 +79,7 @@ const STYLE = <style>{`
 
     .${$disabled} {
         filter: grayscale(1);
-        background: #ebeff1;
+        // background: #ebeff1;
     }
 
     .${$component} > div {

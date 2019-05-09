@@ -18,15 +18,13 @@ import {
     RECEIVE_CONVERSATIONS_ERROR,
     SET_ACTIVE_VIEW,
     SET_USER,
-    REQUEST_CONTACTS,
     RECEIVE_CONTACTS,
-    RECEIVE_CONTACTS_ERROR,
     REQUEST_CONVERSATION,
     RECEIVE_CONVERSATION,
     RECEIVE_CONVERSATION_ERROR,
-    RECEIVE_NEW_CONVERSATION,
-    REQUEST_NEW_CONVERSATION,
-    RECEIVE_NEW_CONVERSATION_ERROR,
+    RECEIVE_MESSAGES,
+    REQUEST_MESSAGES,
+    UPDATE_MESSAGE,
 } from './actionTypes';
 
 export default function reducer(state = initialState, action = {type: '__init__'}) {
@@ -81,6 +79,7 @@ export default function reducer(state = initialState, action = {type: '__init__'
                     return s;
                 }
             })                                  (s.chatView.activeView),
+
             context: z({
                 user: z({
                     data: (s => {
@@ -89,7 +88,7 @@ export default function reducer(state = initialState, action = {type: '__init__'
                         } else {
                             return s;
                         }
-                    })                              (s.chatView.context.user),
+                    })                              (s.chatView.context.user.data),
                 }),
                 conversations: z({
                     isFetching: (s => {
@@ -113,7 +112,11 @@ export default function reducer(state = initialState, action = {type: '__init__'
                 }),
                 contacts: z({
                     data: (s => {
-                        return s
+                        if(RECEIVE_CONTACTS === a.type) {
+                            return z(a.data);
+                        } else {
+                            return s;
+                        }
                     })                           (s.chatView.context.contacts.data)
                 }),
 
@@ -125,84 +128,15 @@ export default function reducer(state = initialState, action = {type: '__init__'
                         return s;
                     })                          (s.chatView.context.messages.data)
                 })
-            
-            }),
-            user: z({
-                isFetching: (s => {
-                    if (SET_USER === a.type) {
-                        return false;
-                    } else {
-                        return s;
-                    }
-                })                          (s.chatView.user),
-                data: (s => {
-                    if (SET_USER === a.type) {
-                        return z(a.data);
-                    } else {
-                        return s;
-                    }
-                })                          (s.chatView.user.data),
             }),
     // navigation 
             navigationView: z({
                 type: NAVIGATION_VIEW,
                 description: 'navigation',
-                activeView: (s => {
-                    if (SET_ACTIVE_VIEW === a.type) {
-                        return [CONVERSATIONS_VIEW, CONTACTS_VIEW].find(v => a.data === v) || s;
-                    } else {
-                        return s;
-                    }
-                })                          (s.chatView.navigationView.activeView),
-        // conversations       
-                conversationsView: z({
-                    type: CONVERSATIONS_VIEW,
-                    description: 'conversations',
-                    conversations: z({
-                        isFetching: (s => {
-                            if (REQUEST_CONVERSATIONS === a.type) {
-                                return true;
-                            } else if (RECEIVE_CONVERSATIONS === a.type) {
-                                return false;
-                            } else if (RECEIVE_CONVERSATIONS_ERROR === a.type) {
-                                return false;
-                            } else {
-                                return s;
-                            }
-                        })                  (s.chatView.navigationView.conversationsView.conversations.isFetching),
-                        data: (s => {
-                            if (RECEIVE_CONVERSATIONS === a.type) {
-                                return z(a.data);
-                            } else {
-                                return s;
-                            }
-                        })                  (s.chatView.navigationView.conversationsView.conversations.data)
-                    })
-                }),
         // contacts
                 contactsView: z({
                     type: CONTACTS_VIEW,
                     description: 'contacts',
-                    contacts: z({
-                        isFetching: (s => {
-                            if (REQUEST_CONTACTS === a.type) {
-                                return true;
-                            } else if (RECEIVE_CONTACTS === a.type) {
-                                return false;
-                            } else if (RECEIVE_CONTACTS_ERROR === a.type) {
-                                return false;
-                            } else {
-                                return s;
-                            }
-                        })                  (s.chatView.navigationView.contactsView.contacts.isFetching),
-                        data: (s => {
-                            if (RECEIVE_CONTACTS === a.type) {
-                                return z(a.data);
-                            } else {
-                                return s;
-                            }
-                        })                  (s.chatView.navigationView.contactsView.contacts.data)
-                    })
                 })
             }),
     // conversation
@@ -211,11 +145,11 @@ export default function reducer(state = initialState, action = {type: '__init__'
                 description: 'conversation',
                 conversation: z({
                     isFetching: (s => {
-                        if (REQUEST_CONVERSATION === a.type || REQUEST_NEW_CONVERSATION === a.type) {
+                        if (REQUEST_CONVERSATION === a.type) {
                             return true;
-                        } else if (RECEIVE_CONVERSATION === a.type || RECEIVE_NEW_CONVERSATION === a.type) {
+                        } else if (RECEIVE_CONVERSATION === a.type) {
                             return false;
-                        } else if (RECEIVE_CONVERSATION_ERROR === a.type || RECEIVE_NEW_CONVERSATION_ERROR === a.type) {
+                        } else if (RECEIVE_CONVERSATION_ERROR === a.type) {
                             return false;
                         } else {
                             return s;
@@ -224,8 +158,6 @@ export default function reducer(state = initialState, action = {type: '__init__'
                     data: (s => {
                         if (RECEIVE_CONVERSATION === a.type) {
                             return z(a.data);
-                        } else if (RECEIVE_NEW_CONVERSATION === a.type ) {
-                            return z(a.data);
                         } else {
                             return s;
                         }
@@ -233,29 +165,37 @@ export default function reducer(state = initialState, action = {type: '__init__'
                 }),
                 chatBubbles: z({
                     isFetching: (s => {
-                        if (REQUEST_NEW_CONVERSATION === a.type) {
-                            return false
+                        if (REQUEST_CONVERSATION === a.type) {
+                            return false;
+                        } else if (REQUEST_MESSAGES === a.type) {
+                            return true;
+                        } else if (RECEIVE_MESSAGES === a.type) {
+                            return false;
                         } else {
                             return s;
                         }
                     })                      (s.chatView.conversationView.chatBubbles.isFetching),
                     data: (s => {
-                        if(REQUEST_NEW_CONVERSATION === a.type) {
+                        if(REQUEST_CONVERSATION === a.type) {
                             return z([]);
+                        } else if (RECEIVE_MESSAGES === a.type && a.data.length > 0) {
+                            return z(a.data);
                         } else {
                             return s;
                         }
                     })                      (s.chatView.conversationView.chatBubbles.data)
                 }),
-                message: {
+                message: z({
                     text: (s => {
-                        if (REQUEST_NEW_CONVERSATION === a.type) {
-                            return ''
+                        if (REQUEST_CONVERSATION === a.type) {
+                            return '';
+                        } else if (UPDATE_MESSAGE === a.type) {
+                            return a.data;   
                         } else {
-                            return s;   
+                            return s;
                         }
                     })                      (s.chatView.conversationView.message.text)
-                }
+                })
             })
         })
     });

@@ -8,7 +8,7 @@ import {
 } from '../css';
 
 import store from '../../model';
-import { setUser, loadConversations, setActiveView } from '../../model/actions';
+import { setUser, loadConversations, setActiveView, loadContacts, populateContext } from '../../model/actions';
 
 
 export default function LoginView({loginView}) {
@@ -19,9 +19,7 @@ export default function LoginView({loginView}) {
             <h5>Please choose demo user:</h5>
             <div className={$user_list_container}>
                 <List items={loginView.users} onChooseItem={user => {
-                    store.dispatch(setUser(user));
-                    store.dispatch(setActiveView(CHAT_VIEW));
-                    store.dispatch(loadConversations(user.id));
+                    store.dispatch(populateContext(user));
                 }}></List>
             </div>
         </div>

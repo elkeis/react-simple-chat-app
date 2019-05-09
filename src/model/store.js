@@ -13,6 +13,8 @@ export default function createStore(reducer) {
             action(dispatch);
             return;
         }
+        console.log(`dispatch`);
+        console.log(action);
         lock(() => {
             state = reducer(state, action);
         }, LOCK_ERROR_MESSAGE);

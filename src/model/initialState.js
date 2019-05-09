@@ -63,14 +63,6 @@ export default z({
             activeView: CONVERSATIONS_VIEW,
             description: 'navigation',
 
-            conversationsView: z({
-                type: CONVERSATIONS_VIEW,
-                description: 'conversations',
-                conversations: z({
-                    isFetching: false,
-                    data: z([])
-                })
-            }),
             contactsView: z({
                 type: CONTACTS_VIEW,
                 description: 'contacts',

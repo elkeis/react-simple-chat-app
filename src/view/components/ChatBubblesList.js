@@ -6,9 +6,9 @@ import  {
     SHADOW_COLOR,
 } from '../css';
 
-export default function ChatBubblesList({chatBubbles}) {
-    const getBubbleContainerClass = (sender => {
-        if(sender.isCurrentUser) {
+export default function ChatBubblesList({chatBubbles, currentUser}) {
+    const getBubbleContainerClass = (isCurrentUser => {
+        if(isCurrentUser) {
             return `${$bubble_container} ${$mine}`;
         } else {
             return `${$bubble_container}`;
@@ -21,7 +21,7 @@ export default function ChatBubblesList({chatBubbles}) {
             return <div className={$no_messages}> <p>No messages here yet...</p></div>;
         } else {
             result.push(chatBubbles.data.map(cb => (
-                <div className={getBubbleContainerClass(cb.sender)} key={cb.id}>
+                <div className={getBubbleContainerClass(cb.senderId === currentUser.id)} key={cb.id}>
                     <div className={$bubble}>
                         <div className={$message}>
                             {cb.message}

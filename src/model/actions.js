@@ -12,18 +12,30 @@ import {
     REQUEST_CONVERSATION,
     RECEIVE_CONVERSATION,
     RECEIVE_CONVERSATION_ERROR,
-    RECEIVE_NEW_CONVERSATION,
-    REQUEST_NEW_CONVERSATION,
-    RECEIVE_NEW_CONVERSATION_ERROR,
+    REQUEST_MESSAGES,
+    RECEIVE_MESSAGES,
+    RECEIVE_MESSAGES_ERROR,
+    UPDATE_MESSAGE,
 } from './actionTypes';
 
 import fetchUsers from '../services/fetchUsers';
 import execute from '../http/execute';
 import fetchConversations from '../services/fetchConversations';
-import fetchConversation from '../services/fetchConversation';
 import fetchContacts from '../services/fetchContacts';
-import { NAVIGATION_VIEW, CONVERSATIONS_VIEW, CONTACTS_VIEW, CONVERSATION_VIEW } from '../view/constants';
-import createNewConversation from '../services/createNewConversation';
+import { CHAT_VIEW } from '../view/constants';
+import openConversation from '../services/openConversation';
+import fetchMessages from '../services/fetchMessages';
+import sendMessage from '../services/sendMessage';
+
+// init
+export function populateContext(user) {
+    return async dispatch => {
+        dispatch(setUser(user));
+        dispatch(setActiveView(CHAT_VIEW));
+        dispatch(loadContacts(user.id));
+        dispatch(loadConversations(user.id));
+    }
+}
 
 // users
 export function requestUsers() {
@@ -108,45 +120,54 @@ export function receiveConversationError(e) {
     return { type: RECEIVE_CONVERSATION_ERROR, data: e }
 }
 
-export function loadConversation(conversationId) {
+export function loadConversation(contact, user, conversations) {
     return async dispatch => {
         dispatch(requestConversation());
         try {
-            const conversation = await execute(fetchConversation(conversationId));
+            const conversation = await execute(openConversation(contact, user, conversations));
             dispatch(receiveConversation(conversation));
+            if (conversation.isNew) {
+                dispatch(loadConversations(user.id));
+            }
+            dispatch(loadMessages(conversation.conversation.id, user.id));
         } catch (e) {
             dispatch(receiveConversationError(e));
         }
     }
 }
 
-export function requestNewConversation() {
-    return {type: REQUEST_NEW_CONVERSATION};
+// messages 
+export function requestMessages () {
+    return {type: REQUEST_MESSAGES};
 }
 
-export function receiveNewConversation(newConversation) {
-    return {type: RECEIVE_NEW_CONVERSATION, data: newConversation};
+export function receiveMessages (messages) {
+    return {type: RECEIVE_MESSAGES, data: messages};
 }
 
-export function receiveNewConversationError(e) {
-    return {type: RECEIVE_NEW_CONVERSATION_ERROR, data: e};
+export function receiveMessagesError(e) {
+    return { type: RECEIVE_MESSAGES_ERROR, data: e };
 }
 
-export function createAndOpenNewConversation(user, recipient) {
+
+export function loadMessages(conversationId, userId) {
     return async dispatch => {
-        try {
-            debugger;
-            dispatch(setActiveView(CONVERSATION_VIEW));
-            dispatch(requestNewConversation());
-            const conversationId = await execute(createNewConversation(user, recipient));
-            const conversation = await execute(fetchConversation(conversationId))
-            dispatch(receiveNewConversation(conversation));
-        } catch (e) {
-            dispatch(receiveNewConversationError());
-        }
+        dispatch(requestMessages());
+        const messages = await execute(fetchMessages(conversationId, userId));
+        dispatch(receiveMessages(messages));
     }
 }
 
+export function postMessage(conversationId, userId, text) {
+    return async dispatch => {
+        await execute(sendMessage(text,userId,conversationId));
+        dispatch(loadMessages);
+    }
+}
+
+export function updateMessage(text) {
+    return {type: UPDATE_MESSAGE, data: text};
+}
 
 // views
 export function setActiveView(viewType) {
@@ -155,17 +176,3 @@ export function setActiveView(viewType) {
 export function setUser(user) {
     return { type: SET_USER, data: user };
 }
-
-export function switchAndRefreshNavigationView(viewType, userId) {
-    console.log(viewType, userId);
-    return async dispatch => {
-        dispatch(setActiveView(NAVIGATION_VIEW))
-        dispatch(setActiveView(viewType))
-        if (CONVERSATIONS_VIEW === viewType) {
-            await dispatch(loadConversations(userId));
-        } else if (CONTACTS_VIEW === viewType) {
-            dispatch(loadContacts(userId));
-        }
-    }
-}
-
